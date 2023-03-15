@@ -1,8 +1,9 @@
 
 import logging
-from telegram import ForceReply, Update, InputMediaPhoto
+from telegram import ForceReply, Update, InputMediaPhoto,Bot
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 from main import get_cars
+import asyncio
 import json
 # Enable logging
 logging.basicConfig(
@@ -18,10 +19,11 @@ def write_to_db(db):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /start is issued."""
     await update.message.reply_text('Salam, {}. Zəhmət olmasa /avto funksiyasından istifadə edərək istədiyiniz maşın modelini qeyd edin və yeni paylaşılan elanlara baxın'.format(update.effective_user['first_name']))
-    chat_id= update.effective_user['id']
+    chat_id= str(update.effective_user['id'])
     if chat_id not in db['users']:
         db['users'][chat_id]=[]
         write_to_db(db)#sort_keys=True
+
 async def avto(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not context.args:
         await update.message.reply_text('Xahiş olunur avtomobilin modelini qeyd edin \nMəsələn, /avto golf')
@@ -34,14 +36,20 @@ async def avto(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 await update.message.reply_media_group(media=images,caption=data.car[i])
         except KeyError:
             await update.message.reply_text('Yalnış model, yenidən sorğu göndərin')
-        
+
+
+async def registered_cars(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+
+
+async def unregister_car(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /help is issued."""
     await update.message.reply_text("Elanları görmək üçün istifadə edin Məsələn, /avto golf")
 
 async def add(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user_id = update.effective_user['id']
+    user_id = str(update.effective_user['id'])
     modeller = context.args
     db['users'][user_id].extend(context.args) #[s,s,s,s]
     write_to_db(db)
