@@ -41,7 +41,7 @@ async def avto(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 images = [InputMediaPhoto(i) for i in data.images[i]]
                 await update.message.reply_media_group(media=images,caption=data.car[i])
         except KeyError:
-            await update.message.reply_text('Yalnış model, yenidən sorğu göndərin')
+            await update.message.reply_text('Yalnış model❌ yenidən sorğu göndərin')
             
 
 
@@ -53,7 +53,7 @@ async def registered_cars(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     if len(cars)>0:
         await update.message.reply_text(', '.join(db["users"][user_id]))
     else:
-        await update.message.reply_text('Qeydiyyatda maşın yoxdur. Əlavə etmək üçün /add funksiyasından istifadə edin.\nMəsələn /add golf')
+        await update.message.reply_text('Qeydiyyatda maşın yoxdur⁉️ Əlavə etmək üçün /add funksiyasından istifadə edin.\nMəsələn /add golf')
 
 async def unregister_car(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     load_data()
@@ -61,7 +61,7 @@ async def unregister_car(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     cars = db["users"][user_id]
     if context.args[0] in cars:
         cars.remove(context.args[0])
-        await update.message.reply_text('{} qeydiyyatdan silindi. Əlavə etmək üçün add funksiyasından istifadə edin'.format(context.args[0]))
+        await update.message.reply_text('{} qeydiyyatdan silindi❌ Əlavə etmək üçün /add funksiyasından istifadə edin'.format(context.args[0]))
         db['users'][user_id] = cars
         write_to_db(db)
     elif context.args[0] not in cars:
@@ -77,7 +77,7 @@ async def add(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     modeller = context.args
     db['users'][user_id].extend(context.args) #[s,s,s,s]
     write_to_db(db)
-    await update.message.reply_text('Elave edildi')
+    await update.message.reply_text('{} siyahıya əlavə edildi✅'.format(", ".join(modeller)))
     #await update._bot.send_message(chat_id=808173920,text='ddd')
 
 def main() -> None:
