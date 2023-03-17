@@ -11,9 +11,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-db = json.load(open('registered_users.json','r'))
+
 def write_to_db(db):
     json.dump(db, open('registered_users.json','w'),indent = 4)
+
+def load_data():
+    global db
+    db = json.load(open('registered_users.json','r'))
+
+load_data()
 # Define a few command handlers. These usually take the two arguments update and
 # context.
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -36,13 +42,31 @@ async def avto(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 await update.message.reply_media_group(media=images,caption=data.car[i])
         except KeyError:
             await update.message.reply_text('Yalnış model, yenidən sorğu göndərin')
+            
 
 
 async def registered_cars(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-
+    load_data()
+    user_id= str(update.effective_user['id'])
+    cars = db["users"][user_id]
+    print(cars)
+    if len(cars)>0:
+        await update.message.reply_text(', '.join(db["users"][user_id]))
+    else:
+        await update.message.reply_text('Qeydiyyatda maşın yoxdur. Əlavə etmək üçün /add funksiyasından istifadə edin.\nMəsələn /add golf')
 
 async def unregister_car(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-
+    load_data()
+    user_id= str(update.effective_user['id'])
+    cars = db["users"][user_id]
+    if context.args[0] in cars:
+        cars.remove(context.args[0])
+        await update.message.reply_text('{} qeydiyyatdan silindi. Əlavə etmək üçün add funksiyasından istifadə edin'.format(context.args[0]))
+        db['users'][user_id] = cars
+        write_to_db(db)
+    elif context.args[0] not in cars:
+        await update.message.reply_text('{} qeydiyyatda yoxdur. Modeli düzgün yazdığınıza əminsiniz?'.format(context.args[0]))
+    
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /help is issued."""
@@ -66,6 +90,8 @@ def main() -> None:
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("avto", avto))
     application.add_handler(CommandHandler("add", add))
+    application.add_handler(CommandHandler("masinlar", registered_cars))
+    application.add_handler(CommandHandler("remove", unregister_car))
     # on non command i.e message - echo the message on Telegram
     #application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
