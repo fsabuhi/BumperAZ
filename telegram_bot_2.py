@@ -5,6 +5,12 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 from main import get_cars
 import asyncio
 import json
+
+from difflib import SequenceMatcher
+
+def similar(a, b): #returns similarity ratio 0-1(float)
+    return SequenceMatcher(None, a, b).ratio()
+
 # Enable logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
