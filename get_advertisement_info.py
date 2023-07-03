@@ -8,7 +8,7 @@ class get_advertisement_info:
         details=[]
         self.images= []
         #self.img = soup.find_all('img',class_='product-photos__slider-top')
-        for i in range(3):
+        for i in range(4):
             self.images.append(soup.find_all('div',class_='product-photos__slider-top-i')[i].find_all('img')[0].attrs['src'])    
         info = soup.find_all('section',class_="product-section product-section--wide")
         self.price = soup.find_all('div',class_="product-price")[0].text
