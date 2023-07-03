@@ -86,11 +86,29 @@ async def add(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text('{} siyahıya əlavə edildi✅'.format(", ".join(modeller)))
     #await update._bot.send_message(chat_id=808173920,text='ddd')
 
+async def bax(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    load_data()
+    user_id= str(update.effective_user['id'])
+    cars = db["users"][user_id]
+    print('Modellər:',cars)
+    if len(cars)>0:
+        for i in db["users"][user_id]:
+            try:
+                car = i
+                data = get_cars(car)
+                for i in range(data.ads_count):
+                    images = [InputMediaPhoto(i) for i in data.images[i]]
+                    await update.message.reply_media_group(media=images,caption=data.car[i])
+            except KeyError:
+                await update.message.reply_text('Siyahıda yalnış model var!')
+        await update.message.reply_text(', '.join(db["users"][user_id]))
+    else:
+        await update.message.reply_text('Qeydiyyatda maşın yoxdur⁉️ Əlavə etmək üçün /add funksiyasından istifadə edin.\nMəsələn /add golf')
+
 def main() -> None:
     """Start the bot."""
     # Create the Application and pass it your bot's token.
     application = Application.builder().token("5686031636:AAGlVULyOcEhn3b9l1CUstZbUZFhfTvCbK0").build()
-
     # on different commands - answer in Telegram
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
@@ -98,6 +116,7 @@ def main() -> None:
     application.add_handler(CommandHandler("add", add))
     application.add_handler(CommandHandler("masinlar", registered_cars))
     application.add_handler(CommandHandler("remove", unregister_car))
+    application.add_handler(CommandHandler("bax", bax))
     # on non command i.e message - echo the message on Telegram
     #application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
