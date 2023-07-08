@@ -55,7 +55,7 @@ def get_advertisement_info(url):
         result['images'].append(soup.find_all('div',class_='product-photos__slider-top-i')[i].find_all('img')[0].attrs['src'])    
     info = soup.find_all('section',class_="product-section product-section--wide")
     
-    result['price'] = soup.find_all('div',class_="product-price")[0].text
+    result['car_price'] = soup.find_all('div',class_="product-price")[0].text
     
     details_name=info[0].find_all('label',class_='product-properties__i-name')
     details_value=info[0].find_all('span',class_='product-properties__i-value')

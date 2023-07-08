@@ -2987,7 +2987,7 @@ model_codes = {
     "tc": "2711",
 }
 
-def __init__(model):
+def id_generator(model):
     """
     returns result (dict). two keys: model_id, brand_id
     """
@@ -2995,4 +2995,5 @@ def __init__(model):
     model = model.lower()
     result['model_id'] = model_codes[model]
     result['brand_id'] = model_brand[model]
+    return result
 

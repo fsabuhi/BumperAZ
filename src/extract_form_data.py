@@ -1,5 +1,3 @@
-import re
-
 data = '''
 marka="79"  kod="2050" model="CA102105"
 marka="67"  kod="2719" model="ML130E18"
@@ -1546,7 +1544,7 @@ marka="251"  kod="2711" model="tC"
 
 
 
-
+import re
 # model_marka={}
 
 model_kod={}

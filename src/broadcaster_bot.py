@@ -16,7 +16,7 @@ def auto_send(db) -> None: #,autos:list,user:str
                 images[0]['caption'] = data.car[i]
                 send_media_group(bot_id=botid,chat_id=user_id,mediagroup=images)
 
-db = json.load(open('registered_users.json','r'))
+db = json.load(open('src/registered_users.json','r'))
 
 print(auto_send(db))
  
