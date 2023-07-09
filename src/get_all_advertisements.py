@@ -3,10 +3,10 @@ import time
 from random import randint
 import json
 time_data = []
-with open('/BumperAZ/src/data.json',"r") as json_file:
+with open('data.json',"r") as json_file:
     db = json.load(json_file)
 
-with open("/BumperAZ/src/sent_requests_id.txt", "r") as fp:
+with open("sent_requests_id.txt", "r") as fp:
     sent_requests_id = []
     for i in fp:
         x = i[:-1]
@@ -20,17 +20,16 @@ for j in range(9000000):
         try:
             data = get_advertisement_info('https://turbo.az/autos/{}'.format(i))
             db[i]=data
-            with open("/BumperAZ/src/data.json", "w") as outfile:
+            with open("data.json", "w") as outfile:
                 json.dump(db, outfile)
             outfile.close()
         except IndexError:
             pass
         time_spent = time.time()-start_time
         time_data.append(time_spent)
-        print(time_data)
         avg = sum(time_data)/len(time_data)
         print('time left:',(10000000-j)*avg/60)
         sent_requests_id.append(i)
-        with open("/BumperAZ/src/sent_requests_id.txt", "w") as fp:
+        with open("sent_requests_id.txt", "w") as fp:
             for _id in sent_requests_id:
                 fp.write("{}\n".format(_id))
