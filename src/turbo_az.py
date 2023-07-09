@@ -41,7 +41,10 @@ def get_advertisement_info(url):
     """
     result = {}
     site = requests.get(url)
-    print(site.status_code)
+    if site.status_code == 429:
+        import sys
+        sys.exit("429!! too many requests")
+
     soup = BeautifulSoup(site.content, 'html.parser')
 
     result['title'] = soup.find_all('div',class_='page-content')[0].find_all('h1',class_='product-title')[0].text
@@ -64,8 +67,10 @@ def get_advertisement_info(url):
     
     result['car_details']= '\n'.join(details)
     #result['car_price']= self.price
-    result['additional_info']=info[1].find('p').text
+    try:
+        result['additional_info']=info[1].find('p').text
+    except AttributeError:
+        result['additional_info'] = ""
     result['car_functions']=info[2].get_text(separator=', ')
-    
     return result
 
