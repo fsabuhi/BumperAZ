@@ -35,12 +35,14 @@ def get_advertisement_links(url,count=None):
         links.append('https://turbo.az'+i.find('a',class_="products-i__link").attrs['href'])
     return links
 
-def get_advertisement_info(url):  
+def get_advertisement_info(url,proxy):  
     """
     Returns dict with keys (title,images,car_details,car_price,additional_info,car_functions)
     """
     result = {}
-    site = requests.get(url)
+    site = requests.get(url,proxies=proxy,headers={'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'}
+)
+    print(site.status_code,site.reason)
     if site.status_code == 429:
         import sys
         sys.exit("429!! too many requests")
